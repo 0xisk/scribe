@@ -13,7 +13,6 @@
     "build": "vite build",
     "serve": "vite preview",
     "lint": "eslint .",
-    "test": "pnpm test",
     "lint:fix": "eslint . --fix",
     "ci:check-tag": "node scripts/check-tag.mjs"
   },
