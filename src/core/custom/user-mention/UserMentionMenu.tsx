@@ -53,8 +53,8 @@ export function UserMentionMenu(props: UserMentionMenuProps) {
     return props.users
       .filter((user) => {
         return (
-          user.description.toLowerCase().includes(filter) ||
-          user.identifier.toLowerCase().includes(filter)
+          (user.description ?? '').toLowerCase().includes(filter) ||
+          (user.identifier ?? '').toLowerCase().includes(filter)
         )
       })
       .slice(0, 100)
