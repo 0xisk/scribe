@@ -4,7 +4,7 @@
     "jsx": "preserve",
     "jsxImportSource": "solid-js",
     "paths": {
-      "@better-comments-for-github/core/*": ["../src/*"]
+      "@scribe/core/*": ["../src/*"]
     }
   }
 }

@@ -1,4 +1,8 @@
-Copyright 2025 Riccardo Perra
+Scribe
+======
+
+Copyright 2025 Riccardo Perra (upstream: better-comments-for-github)
+Copyright 2026 0xisk (Scribe fork)
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -11,3 +15,61 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
+
+
+Attribution
+-----------
+
+This project is a fork of
+  https://github.com/riccardoperra/better-comments-for-github
+by Riccardo Perra, distributed under the Apache License 2.0.
+
+The block-based Markdown editor, prosekit integration, slash commands,
+toolbar, table handling, code-block features, GitHub node support,
+URL-parsing / page-detection / textarea-handling infrastructure, and the
+build pipeline (WXT configuration, monorepo layout, markdown-schema /
+markdown-transformer packages) all originate from the upstream project.
+Upstream copyright notices in source file headers have been preserved.
+
+
+Modifications in this fork
+--------------------------
+
+Per Apache 2.0 section 4(b), notable changes introduced by the Scribe fork
+include:
+
+- Package scope rename: @better-comments-for-github/* -> @scribe/*.
+- Extension identity: manifest name "Better comments for GitHub" is now
+  "Scribe"; zip artifact renamed; icon artwork replaced with the
+  Nib-Block mark.
+- New review-comment prefix system:
+    - src/core/custom/comment-prefix/               (new directory)
+      - comment-prefix-config.ts
+      - comment-prefix.ts
+      - comment-prefix-decoration.ts
+      - comment-prefix.test.ts
+    - src/core/editor/missing-prefix-warning/       (new directory)
+      - missing-prefix-warning.tsx
+      - missing-prefix-warning.module.css
+    - src/core/editor/settings/prefix-settings.tsx  (new file)
+    - src/core/editor/settings/prefix-settings.module.css (new file)
+- New rendered-comment tinter content script:
+    - extension/src/utils/renderedCommentTinter.ts  (new file)
+- Modifications to wire the prefix feature through the editor:
+    - src/core/editor/extension.ts                   (extended)
+    - src/core/editor/slash-menu/slash-menu.tsx      (extended)
+    - src/core/editor/toolbar/toolbar.tsx            (extended)
+    - src/core/editor/settings/settings.tsx          (extended)
+    - src/core/editor/editor.tsx                     (extended)
+    - src/actions.ts                                 (extended)
+    - src/editor/editor.tsx                          (extended)
+    - src/render.tsx                                 (extended)
+    - extension/src/entrypoints/editor-content.ts   (extended)
+- Removal of the upstream landing site (landing/ directory).
+- Replacement of logo and brand marketing assets.
+- Documentation rewrite (README.md).
+- pnpm-workspace adjustments to drop the landing workspace.
+
+Files modified by this fork retain their original upstream Apache 2.0
+headers unchanged. Files newly created for this fork carry Apache 2.0
+headers identifying the Scribe fork copyright.

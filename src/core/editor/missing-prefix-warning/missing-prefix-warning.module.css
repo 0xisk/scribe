@@ -1,0 +1,92 @@
+/*
+ * Copyright 2026 0xisk (Scribe fork)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+.bar {
+  display: flex;
+  align-items: center;
+  gap: var(--base-size-6);
+  padding: var(--base-size-6) var(--base-size-8);
+  font-size: 12px;
+  flex-wrap: wrap;
+}
+
+.barWarning {
+  background: var(--bgColor-attention-muted, #fff8c5);
+  border-bottom: 1px solid var(--borderColor-attention-muted, #eac54f);
+  color: var(--fgColor-attention, #7d4e00);
+}
+
+.barWarning .icon {
+  color: var(--fgColor-attention, #9a6700);
+}
+
+.barWarning .quickAction {
+  border-color: var(--borderColor-attention-muted, #eac54f);
+}
+
+.barTagged {
+  background: var(--bgColor-success-muted, #dafbe1);
+  border-bottom: 1px solid var(--borderColor-success-muted, #aceebb);
+  color: var(--fgColor-success, #1a7f37);
+}
+
+.barTagged .icon {
+  color: var(--fgColor-success, #1a7f37);
+}
+
+.barTagged .quickAction {
+  border-color: var(--borderColor-success-muted, #aceebb);
+}
+
+.icon {
+  flex-shrink: 0;
+}
+
+.message {
+  flex: 1;
+  min-width: 180px;
+}
+
+.actions {
+  display: flex;
+  gap: var(--base-size-4);
+  flex-wrap: wrap;
+}
+
+.quickAction {
+  appearance: none;
+  background: var(--bgColor-default, #fff);
+  border: 1px solid var(--borderColor-default);
+  border-radius: var(--borderRadius-small, 0.25rem);
+  padding: 0 var(--base-size-6);
+  height: 22px;
+  font-family: var(--fontStack-monospace);
+  font-size: 11px;
+  font-weight: var(--base-text-weight-semibold, 600);
+  color: var(--fgColor-default);
+  cursor: pointer;
+  transition: background-color 80ms;
+}
+
+.quickAction:hover {
+  background: var(--bgColor-neutral-muted, #f6f8fa);
+}
+
+.quickActionEmoji {
+  font-size: 12px;
+  line-height: 1;
+  margin-right: var(--base-size-4);
+}

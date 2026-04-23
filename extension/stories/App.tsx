@@ -51,6 +51,7 @@ export function App(props: AppProps) {
                   owner: () => 'riccardoperra',
                   repository: () => 'test-repository',
                   hovercardSubjectTag: () => '1',
+                  pageFlags: () => 0,
                   uploadHandler: mockUploader,
                   get initialValue() {
                     return textareaRef().value

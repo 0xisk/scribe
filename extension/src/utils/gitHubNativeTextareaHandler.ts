@@ -21,11 +21,11 @@ import {
   fetchMentionableUsers,
   getUserAvatarId,
   tryGetReferences,
-} from '@better-comments-for-github/core/github/data'
-import { GitHubUploaderNativeHandler } from '@better-comments-for-github/core/core/custom/image/github-file-uploader'
-import { log } from '@better-comments-for-github/core/editor/utils/logger'
-import type { AttachmentHandlerElement } from '@better-comments-for-github/core/core/custom/image/github-file-uploader'
-import type { SuggestionData } from '@better-comments-for-github/core/editor/utils/loadSuggestionData'
+} from '@scribe/core/github/data'
+import { GitHubUploaderNativeHandler } from '@scribe/core/core/custom/image/github-file-uploader'
+import { log } from '@scribe/core/editor/utils/logger'
+import type { AttachmentHandlerElement } from '@scribe/core/core/custom/image/github-file-uploader'
+import type { SuggestionData } from '@scribe/core/editor/utils/loadSuggestionData'
 
 export class GitHubNativeTextareaHandler {
   readonly classes: { [key: string]: Array<string> } = {}

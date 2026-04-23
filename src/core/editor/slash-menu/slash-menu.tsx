@@ -25,7 +25,9 @@ import {
   AutocompletePopover,
 } from '../autocomplete/Autocomplete'
 
+import LucideTag from 'lucide-solid/icons/tag'
 import { githubAlertTypeMap } from '../../custom/githubAlert/config'
+import { prefixes } from '../../custom/comment-prefix/comment-prefix-config'
 import { EditorTextShortcut } from '../../ui/kbd/kbd'
 import { EditorActionIcon } from '../../ui/action-icon/ActionIcon'
 import styles from './slash-menu.module.css'
@@ -147,15 +149,34 @@ const slashMenuSectionConfig: Record<string, SlashMenuSection> = {
     id: 'list',
     title: 'List blocks',
   },
+  prefix: {
+    id: 'prefix',
+    title: 'Prefixes',
+  },
 }
 
-function groupMenuItems() {
+function buildPrefixMenuItems(): Array<SlashMenuItem> {
+  return prefixes().map(
+    (prefix) =>
+      ({
+        label: `Prefix: ${prefix.token}`,
+        icon: LucideTag,
+        sectionId: 'prefix',
+        command: (editor) =>
+          editor.commands.insertCommentPrefix(prefix.token),
+        canExec: (editor) =>
+          editor.commands.insertCommentPrefix.canExec(prefix.token),
+      }) satisfies SlashMenuItem,
+  )
+}
+
+function groupMenuItems(items: Array<SlashMenuItem>) {
   const map: { [sectionId: string]: Array<SlashMenuItem> } = {}
   const result: Array<{
     section: SlashMenuSection
     children: Array<SlashMenuItem>
   }> = []
-  for (const menuItem of SlashMenuItems) {
+  for (const menuItem of items) {
     const section = menuItem.sectionId ?? 'base'
 
     if (!map[section]) {
@@ -173,18 +194,20 @@ function groupMenuItems() {
   return result
 }
 
-const GroupedMenuItems = groupMenuItems()
-
 export default function SlashMenu() {
   const editor = useEditor<EditorExtension>()
   const [query, setQuery] = createSignal('')
   // Match inputs like "/", "/table", "/heading 1" etc. Do not match "/ heading".
   const regex = canUseRegexLookbehind() ? /(?<!\S)\/(|\S.*)$/u : /\/(|\S.*)$/u
 
+  const groupedMenuItems = createMemo(() =>
+    groupMenuItems([...SlashMenuItems, ...buildPrefixMenuItems()]),
+  )
+
   const filteredMenuItems = createMemo(() => {
     const currentQuery = query()
-    const updatedGroupedMenuItems: typeof GroupedMenuItems = []
-    for (const group of GroupedMenuItems) {
+    const updatedGroupedMenuItems: ReturnType<typeof groupMenuItems> = []
+    for (const group of groupedMenuItems()) {
       const items: Array<SlashMenuItem> = []
       for (const item of group.children) {
         if (item.label.toLowerCase().includes(currentQuery)) {

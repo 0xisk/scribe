@@ -1,5 +1,5 @@
 {
-  "name": "@better-comments-for-github/extension",
+  "name": "@scribe/extension",
   "description": "manifest.json description",
   "private": true,
   "version": "0.0.21",

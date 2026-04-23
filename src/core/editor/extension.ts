@@ -62,6 +62,7 @@ import { defineDetails } from '../custom/details/details'
 import { defineExitable } from '../custom/exitable/exitable'
 import { defineTableInsert } from '../custom/table/table-insert-plugin'
 import { defineLink } from '../custom/link/link'
+import { defineCommentPrefix } from '../custom/comment-prefix/comment-prefix'
 import type { HeadingAttrs } from 'prosekit/extensions/heading'
 
 function defineCode() {
@@ -141,6 +142,7 @@ export function defineExtension() {
       component: UserMentionView,
     }),
     defineTableInsert(),
+    defineCommentPrefix(),
   )
 }
 

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { query } from '@better-comments-for-github/core/dom/query'
+import { query } from '@scribe/core/dom/query'
 
 export function githubQueryEditorParent(options: {
   onNodeAdded: (textarea: HTMLTextAreaElement, parent: HTMLElement) => void

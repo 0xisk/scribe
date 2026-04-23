@@ -115,6 +115,7 @@ export function runInTestRoot(content: string, fn: () => any) {
         get type() {
           return 'native' as const
         },
+        pageFlags: () => 0,
       } satisfies EditorRootContextProps,
     }
 

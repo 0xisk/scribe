@@ -24,15 +24,15 @@ export default defineConfig({
   },
 
   zip: {
-    name: 'better-comments-for-github',
+    name: 'scribe',
   },
 
   modules: ['@wxt-dev/module-solid'],
 
   manifest: {
-    name: 'Better comments for GitHub',
+    name: 'Scribe',
     description:
-      'A chrome extension that will enhance the GitHub native comment editor with a more powerful wysiwyg block based editor',
+      'A better GitHub comment box — block-based WYSIWYG Markdown editor with per-line review tags (nit, non-blocking, followup, question, blocking) and color-coded classification.',
     author: {
       email: 'riccardo.perra@icloud.com',
     },

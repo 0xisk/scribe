@@ -43,6 +43,7 @@ export interface RenderEditorProps {
   owner: Accessor<string | null>
   repository: Accessor<string | null>
   hovercardSubjectTag: Accessor<string | null>
+  pageFlags: Accessor<number>
 }
 
 export function SwitchButton(props: {
@@ -182,6 +183,9 @@ export function mountEditor(root: HTMLElement, props: RenderEditorProps) {
                   },
                   get owner() {
                     return props.owner
+                  },
+                  get pageFlags() {
+                    return props.pageFlags
                   },
                 }}
               >

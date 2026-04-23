@@ -69,6 +69,7 @@ export type EditorRootContextProps = {
   repository: Accessor<string | null>
   owner: Accessor<string | null>
   hovercardSubjectTag: Accessor<string | null>
+  pageFlags: Accessor<number>
 }
 
 export const EditorRootContext = createContext<EditorRootContextProps>()

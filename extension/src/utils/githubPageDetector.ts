@@ -15,12 +15,12 @@
  */
 
 import { createComponent, createSignal, createUniqueId } from 'solid-js'
-import { log } from '@better-comments-for-github/core/editor/utils/logger'
+import { log } from '@scribe/core/editor/utils/logger'
 import { SwitchButton } from '../../../src/render'
 import type { Accessor, ComponentProps, Setter } from 'solid-js'
 import type { GitHubUrlParsedResult } from './githubUrlParser'
 import type { SuggestionData } from '../../../src/editor/utils/loadSuggestionData'
-import type { SuggestedChangeConfig } from '@better-comments-for-github/core/editor/utils/loadCodeSuggestionChangesConfig'
+import type { SuggestedChangeConfig } from '@scribe/core/editor/utils/loadCodeSuggestionChangesConfig'
 
 export interface GithubPageInstanceResult {
   readonly currentUsername: Accessor<string | null>

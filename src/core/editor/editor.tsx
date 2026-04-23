@@ -19,6 +19,7 @@ import { UserMentionMenu } from '../custom/user-mention/UserMentionMenu'
 import { IssueReferenceMenu } from '../custom/issue-reference/IssueReferenceMenu/IssueReferenceMenu'
 import { TableInsertDropdown } from '../custom/table/table-insert-dropdown'
 import { Toolbar } from './toolbar/toolbar'
+import { MissingPrefixWarning } from './missing-prefix-warning/missing-prefix-warning'
 import styles from './editor.module.css'
 import { EditorBlockHandler } from './block-handle/block-handle'
 import InlineMenu from './inline-menu/InlineMenu'
@@ -42,6 +43,7 @@ export function ProsekitEditor(props: ProsekitEditor) {
       <div class={styles.Editor}>
         <div class={styles.EditorContent}>
           <Toolbar />
+          <MissingPrefixWarning />
 
           <div
             ref={props.editor.mount}

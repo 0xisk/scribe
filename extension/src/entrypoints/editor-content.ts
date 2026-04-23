@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { mountEditor } from '@better-comments-for-github/core/render'
-import { log } from '@better-comments-for-github/core/editor/utils/logger'
+import { mountEditor } from '@scribe/core/render'
+import { log } from '@scribe/core/editor/utils/logger'
 import {
   createGitHubEditorInstance,
   createGitHubPageInstance,
@@ -27,9 +27,12 @@ import { GitHubNativeTextareaHandler } from '../utils/gitHubNativeTextareaHandle
 import { GitHubEditorInjector } from '../utils/injectEditor'
 import { GitHubReactTextareaHandler } from '../utils/gitHubReactTextareaHandler'
 import { githubQueryEditorParent } from '../utils/githubQueryEditorParent'
-import type { EditorType } from '@better-comments-for-github/core/editor/editor'
+import { startRenderedCommentTinter } from '../utils/renderedCommentTinter'
+import type { EditorType } from '@scribe/core/editor/editor'
 
 export default defineUnlistedScript(() => {
+  startRenderedCommentTinter()
+
   createRoot(() => {
     let observerDisposer: undefined | (() => void)
     let rootDisposer: undefined | (() => void)
@@ -52,6 +55,7 @@ export default defineUnlistedScript(() => {
         const hovercardSubjectTag = this.hovercardSubjectTag
         const repository = () => parsedUrl()?.repository ?? null
         const repositoryOwner = () => parsedUrl()?.repositoryOwner ?? null
+        const pageFlags = () => parsedUrl()?.flags ?? 0
         if (observerDisposer) {
           observerDisposer()
           observerDisposer = undefined
@@ -71,6 +75,12 @@ export default defineUnlistedScript(() => {
               }
             },
             onNodeAdded: (textarea, element) => {
+              // Dedup: if this textarea already has a Scribe editor attached,
+              // skip. Reply forms can fire onAdded more than once per textarea.
+              if (getGitHubEditorInstanceFromElement(textarea)) {
+                log('Skip duplicate editor mount', { textarea })
+                return
+              }
               createRoot((dispose) => {
                 const editorInstance = createGitHubEditorInstance(
                   element,
@@ -239,6 +249,7 @@ export default defineUnlistedScript(() => {
                     type,
                     repository,
                     owner: repositoryOwner,
+                    pageFlags,
                   }),
                 )
               })

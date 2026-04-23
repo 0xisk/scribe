@@ -15,6 +15,7 @@
  */
 
 import { ConfigStore } from '../../../config.store'
+import { PrefixSettings } from './prefix-settings'
 import styles from './settings.module.css'
 
 export function Settings() {
@@ -42,6 +43,8 @@ export function Settings() {
           </span>
         </span>
       </div>
+
+      <PrefixSettings />
     </div>
   )
 }

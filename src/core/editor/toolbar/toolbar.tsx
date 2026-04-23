@@ -37,6 +37,7 @@ import {
   DropdownMenuTrigger,
 } from '../../ui/dropdown-menu/dropdown-menu'
 import { githubAlertTypeMap } from '../../custom/githubAlert/config'
+import { prefixes } from '../../custom/comment-prefix/comment-prefix-config'
 import { Settings } from '../settings/settings'
 import { EditorTextShortcut } from '../../ui/kbd/kbd'
 import { EditorActionIcon } from '../../ui/action-icon/ActionIcon'
@@ -371,6 +372,67 @@ export function Toolbar() {
               </DropdownMenuItem>
             )}
           </For>
+        </DropdownMenuContent>
+      </DropdownMenu>
+
+      <DropdownMenu>
+        <Tooltip>
+          <TooltipTrigger as={DropdownMenuTrigger} class={styles.ToolbarAction}>
+            <EditorActionIcon actionId={'prefix'} size={16} />
+            <LucideChevronDown size={14} />
+          </TooltipTrigger>
+          <TooltipContent>Comment prefix</TooltipContent>
+        </Tooltip>
+        <DropdownMenuContent>
+          <Show
+            when={prefixes().length > 0}
+            fallback={
+              <DropdownMenuItem disabled>
+                No prefixes configured
+              </DropdownMenuItem>
+            }
+          >
+            <For each={prefixes()}>
+              {(prefix) => (
+                <DropdownMenuItem
+                  disabled={
+                    !editor().commands.insertCommentPrefix.canExec(prefix.token)
+                  }
+                  onClick={() =>
+                    editor().commands.insertCommentPrefix(prefix.token)
+                  }
+                >
+                  <Show
+                    when={prefix.emoji}
+                    fallback={
+                      <Show when={prefix.color}>
+                        <span
+                          class={styles.PrefixSwatch}
+                          style={{ 'background-color': prefix.color }}
+                          aria-hidden="true"
+                        />
+                      </Show>
+                    }
+                  >
+                    <span class={styles.PrefixEmoji} aria-hidden="true">
+                      {prefix.emoji}
+                    </span>
+                  </Show>
+                  <span
+                    class={styles.PrefixToken}
+                    style={prefix.color ? { color: prefix.color } : undefined}
+                  >
+                    {prefix.token}
+                  </span>
+                  <Show when={prefix.description}>
+                    <span class={styles.PrefixDescription}>
+                      {prefix.description}
+                    </span>
+                  </Show>
+                </DropdownMenuItem>
+              )}
+            </For>
+          </Show>
         </DropdownMenuContent>
       </DropdownMenu>
 

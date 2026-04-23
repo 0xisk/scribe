@@ -40,6 +40,7 @@ import LucidePanelBottom from 'lucide-solid/icons/panel-bottom'
 import LucideAlertOctagon from 'lucide-solid/icons/alert-octagon'
 import LucideTable from 'lucide-solid/icons/table-2'
 import LucideLink from 'lucide-solid/icons/link'
+import LucideTag from 'lucide-solid/icons/tag'
 import { githubAlertTypeMap } from './core/custom/githubAlert/config'
 import { SuggestedChangeIcon } from './core/ui/suggested-change-icon/SuggestedChangeIcon'
 import type { LucideProps } from 'lucide-solid'
@@ -141,6 +142,10 @@ export const EditorActionConfig = {
   },
   table: {
     icon: LucideTable,
+    shortcuts: [],
+  },
+  prefix: {
+    icon: LucideTag,
     shortcuts: [],
   },
   ...Object.values(githubAlertTypeMap).reduce(

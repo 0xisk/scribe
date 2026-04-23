@@ -91,3 +91,37 @@
 .HorizontalListbox {
   display: flex;
 }
+
+.PrefixToken {
+  font-family: var(--fontStack-monospace);
+  font-size: 12px;
+  font-weight: var(--base-text-weight-semibold, 600);
+  color: var(--fgColor-default);
+  padding: 0 var(--base-size-4);
+  background: var(--bgColor-neutral-muted);
+  border-radius: var(--borderRadius-small, 0.25rem);
+}
+
+.PrefixDescription {
+  color: var(--fgColor-muted);
+  font-size: 12px;
+  margin-left: var(--base-size-4);
+}
+
+.PrefixSwatch {
+  display: inline-block;
+  flex-shrink: 0;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 1px solid var(--borderColor-default);
+  margin-right: var(--base-size-4);
+}
+
+.PrefixEmoji {
+  display: inline-block;
+  flex-shrink: 0;
+  font-size: 14px;
+  line-height: 1;
+  margin-right: var(--base-size-4);
+}

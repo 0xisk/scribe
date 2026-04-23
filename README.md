@@ -1,123 +1,168 @@
 <p align="center">
-    <img src="./brand/logo_512x512.png" alt="Logo" width="64">
-</p>
-<h1 align="center">
-    Better comments for GitHub
-</h1>
-
-<p align="center">
-  <i>Ever spent too much time writing a decent review, issue comment, or discussion?
-  <br>What if the GitHub comment box could work better?</i> <span>👀</span> 
+  <img alt="Chrome Web Store — coming soon" src="https://img.shields.io/badge/Chrome%20Web%20Store-coming%20soon-f6b73c?style=for-the-badge&logo=googlechrome&logoColor=white">
+  <img alt="Install: manual only" src="https://img.shields.io/badge/Install-manual%20only-blue?style=for-the-badge">
+  <img alt="License: Apache 2.0" src="https://img.shields.io/badge/License-Apache%202.0-0969da?style=for-the-badge">
 </p>
 
 <p align="center">
-An extension that <strong>completely replaces</strong> the GitHub native comment box, <br>
-to a new <strong>block-based</strong> editor and a seamless real-time preview experience. 
+    <img src="./brand/logo_512x512.png" alt="Scribe logo" width="96">
+</p>
+<h1 align="center">Scribe</h1>
+<p align="center">
+  <i>A better GitHub comment box — with first-class support for tagged review comments.</i>
 </p>
 
 <p align="center">
-<img src="./brand/github_image.png" width="500" alt="Promotional image">
+  A browser extension that <strong>replaces</strong> GitHub's native comment box
+  with a block-based Markdown editor, plus a per-line prefix palette
+  (<code>nit:</code>, <code>non-blocking:</code>, <code>followup:</code>,
+  <code>question:</code>, <code>blocking:</code>) so review comments stay
+  classified and consistent.
 </p>
-
-<a align="center" href="https://www.producthunt.com/products/better-comments-for-github?embed=true&utm_source=badge-featured&utm_medium=badge&utm_source=badge-better&#0045;comments&#0045;for&#0045;github&#0045;2" target="_blank">
- <img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1019364&theme=dark&t=1758697313946" alt="Better&#0032;Comments&#0032;for&#0032;GitHub - The&#0032;browser&#0032;extension&#0032;that&#0032;supercharges&#0032;GitHub&#0032;comment&#0032;box | Product Hunt" style="width: 250px; height: 54px;" width="250" height="54" />
-</a>
-
-[X post](https://x.com/riccardoperra0/status/1970834056989507855)
-
-> [!IMPORTANT]
->
-> This extension is still in development. As always, feedback in this phase is very important, so please open an issue
-> if you find any bug or have any suggestion.
->
-> ---
->
-> This project is not affiliated with GitHub, Inc. in any way. It is an independent project that I initially created for
-> myself that aims to enhance the GitHub user experience by providing a better comment editor.
-
-## 🚀 Features
-
-- ✅ **WYSIWYG Markdown Editor**: Replace all GitHub's native comment box with a visual Markdown editor powered by ProseMirror, providing a rich editing experience while writing Markdown.  
-- ✅ **GitHub Node Support**: Full support for GitHub-specific nodes like alerts, tables, lists, and more.  
-- ✅ **Slash Commands & Toolbar**: Quickly insert elements and formatting with slash commands and a customizable toolbar.  
-- ✅ **Code Blocks with Syntax Highlighting**: Write code blocks in any language with proper syntax highlighting for improved readability.  
-- ✅ **TypeScript Autocomplete & IntelliSense**: For TypeScript code blocks, the editor integrates CodeMirror with the TypeScript Language Server, providing intelligent autocompletion, inline npm package suggestions, and real-time type checking.  
-- ✅ **GitHub References**: Reference issues, pull requests, discussions, and users directly within your comments.
-- ✅ **Advanced Table Handling**: Intuitive table creation, editing, and navigation.  
-- ✅ **Native GitHub Styling**: Uses GitHub’s own css variables and styles, integrating smoothly with the GitHub interface.
-- and more...
-
-> [!CAUTION]
->
-> Work in progress
-
-[List of all supported features discussion](https://github.com/riccardoperra/better-comments-for-github/discussions/50)
-
-## Install
-
-This extension can be installed via official web store or manually, via the artifacts published in the release page.
-Consider that installing via web store is the recommended way, as it will automatically update the extension when a new
-version is released.
 
 > [!NOTE]
 >
-> Since publishing extensions on the web store requires approval, the latest version on the web store may mismatch the
-> latest version on the GitHub repository.
-
-[link-chrome]: https://chrome.google.com/webstore/detail/better-comments-for-githu/hkpjbleacapfcfeneimhmcipjkfbgdpg 'Version published on Chrome Web Store'
-
-[<img src="https://raw.githubusercontent.com/alrra/browser-logos/90fdf03c/src/chrome/chrome.svg" width="48" alt="Chrome" valign="middle">][link-chrome] [<img valign="middle" src="https://img.shields.io/chrome-web-store/v/hkpjbleacapfcfeneimhmcipjkfbgdpg.svg?label=%20">][link-chrome]
-and other Chromium browsers
+> **This is a fork of [riccardoperra/better-comments-for-github](https://github.com/riccardoperra/better-comments-for-github).**
+> The upstream project provides the block-based editor. Scribe adds the review-comment
+> prefix system (colored tags, palette bar, in-editor tinting, post-render color pass on
+> GitHub) and a rebrand. All upstream improvements flow back in.
 
 > [!IMPORTANT]
-> 
-> [Firefox support coming soon](https://github.com/riccardoperra/better-comments-for-github/issues/69).
+>
+> **Scribe is not published on the Chrome Web Store yet.** Until the store listing is
+> approved, installation is manual — see [Install](#install) below. Each time you want
+> the latest version, re-download the build artifact and reload the unpacked extension.
 
-Install (or update) manually:
+## What's new in Scribe
 
-- Download the [latest release](https://github.com/riccardoperra/better-comments-for-github/releases/latest) or
-  any [other version](https://github.com/riccardoperra/better-comments-for-github/releases) from the release page
-- Load the unpacked extension in your browser:
-    - In **chrome**, go to `chrome://extensions`, then drag the zip into the page or just click on "Load unpacked" and
-      select the zip file.
-    - In **firefox**, go to `about:debugging#/runtime/this-firefox`, then click on "Load Temporary Add-on" and select the
-      firefox zip file.
+On top of the upstream editor, Scribe ships a complete review-comment tagging system:
+
+- ✅ **Per-line prefix tags.** Insert `blocking:`, `nit:`, `followup:`, `question:`, `praise:`, etc. at the start of any line with a single click — emit clean Markdown like `🔴 **blocking:** the actual bug`.
+- ✅ **Color-coded tags.** Each prefix carries a configurable color and emoji. You pick the palette — two presets built in (team convention & [Conventional Comments](https://conventionalcomments.org/)).
+- ✅ **Always-on palette bar.** On PR pages, a tag palette sits above the editor for instant insertion. The bar goes yellow (*"Missing a tag?"*) on a tagless review comment and green (*"Tagged — add more if you have several notes."*) once you've tagged at least one line. Replies never nag.
+- ✅ **Live editor tinting.** As you type, the configured color is applied to the token (`nit:` shows in gray, `blocking:` in red, etc.) via a ProseMirror decoration plugin — markdown output stays `**nit:**`, unchanged.
+- ✅ **Post-render color in GitHub comments.** A content-script tinter color-codes matching `<strong>` tags in already-submitted comments across GitHub — every review you read gets the same visual classification you typed.
+- ✅ **Settings UI.** Add / edit / reorder / delete prefixes. Emoji + color per prefix. One-click presets. Syncs across devices via `chrome.storage.sync`.
+
+## Core features (inherited from upstream)
+
+- ✅ **WYSIWYG Markdown editor** — replaces every GitHub comment box with a visual Markdown editor powered by ProseMirror.
+- ✅ **Full GitHub node support** — alerts, tables, lists, task lists, details, mentions, issue references, images, more.
+- ✅ **Slash commands & toolbar** — quick insertion of blocks and formatting.
+- ✅ **Code blocks with syntax highlighting** — any language.
+- ✅ **TypeScript IntelliSense in code blocks** — CodeMirror + TypeScript language server with npm package autocompletion and real-time type-checking.
+- ✅ **Advanced table handling** — intuitive creation, editing, and navigation.
+- ✅ **Native GitHub styling** — uses GitHub Primer CSS variables and classes so it blends into the host UI.
+
+[Full supported-features discussion (upstream)](https://github.com/riccardoperra/better-comments-for-github/discussions/50)
+
+> [!CAUTION]
+> Work in progress. Expect sharp edges. Issues and PRs welcome.
+
+## Install
+
+**Scribe is not on the Chrome Web Store yet — you have to install it manually until it is.**
+
+### Option A: build from source (recommended during active development)
+
+```bash
+# Clone this fork
+git clone https://github.com/0xisk/scribe.git
+cd scribe
+
+# Install deps and build
+pnpm install
+pnpm build:core-libs
+pnpm --filter ./extension build
+```
+
+The build output lands in [extension/dist/chrome-mv3/](extension/dist/chrome-mv3/).
+
+### Option B: build a zip for sharing
+
+```bash
+pnpm --filter ./extension zip
+```
+
+The zip appears under `extension/.output/scribe-<version>-chrome.zip`. Share that with teammates; they then follow the Chromium load steps below pointing at the zip's unpacked folder.
+
+### Load into Chromium (Brave, Chrome, Arc, Edge, etc.)
+
+1. Open **`chrome://extensions`** (or `brave://extensions`, `edge://extensions`, …).
+2. Toggle **Developer mode** on (top-right).
+3. Click **Load unpacked**.
+4. Point it at `extension/dist/chrome-mv3/`.
+5. Visit github.com — the comment boxes are now Scribe.
+
+### Load into Firefox (temporary add-on)
+
+Firefox support is tracked [upstream](https://github.com/riccardoperra/better-comments-for-github/issues/69) and is still a work in progress. For now:
+
+1. `pnpm --filter ./extension build:firefox`
+2. Open `about:debugging#/runtime/this-firefox` → **Load Temporary Add-on** → select `extension/dist/firefox-mv2/manifest.json`.
+3. Note: temporary add-ons are removed when Firefox restarts.
+
+### Staying current
+
+Until the store listing is approved, there's no auto-update. When you want the latest Scribe:
+
+1. `git pull`
+2. `pnpm --filter ./extension build`
+3. Go to `chrome://extensions` and click the ↻ button on the Scribe card.
+
+## Development
+
+```bash
+pnpm install
+pnpm build:core-libs
+pnpm --filter ./extension dev          # hot-reload while you edit
+```
+
+For unit tests:
+
+```bash
+pnpm exec vitest run
+```
+
+For a storybook of editor components:
+
+```bash
+pnpm --filter ./extension storybook
+```
 
 ## Project structure
 
-The project structure is organized in a monorepo using pnpm workspaces. The structure is still WIP and doesn't 
-respect yet the best practices (root folder is a package itself too), but it will be improved in the future.
+Monorepo via pnpm workspaces:
 
-- **brand**: contains the branding assets, such as logos, promotional assets published in web store.
-- **markdown-schema**: a package that contains the markdown proseMirror nodes used by the editor.
-- **markdown-transformer**: a package that contains the logic to transform the markdown schema into ProseMirror and vice
-  versa.
-- **extension**: the browser extension package, responsible to load the editor in the GitHub pages.
-- **src**: the core of the editor
+- **[src/](src/)** — the editor core (ProseMirror + prosekit + SolidJS + Kobalte). Prefix-tag feature lives at [src/core/custom/comment-prefix/](src/core/custom/comment-prefix/).
+- **[extension/](extension/)** — the browser extension shell (WXT). Content scripts, page detection, textarea handlers, the post-render tinter ([extension/src/utils/renderedCommentTinter.ts](extension/src/utils/renderedCommentTinter.ts)).
+- **[markdown-schema/](markdown-schema/)** — ProseMirror node definitions for Markdown.
+- **[markdown-transformer/](markdown-transformer/)** — Markdown ↔ ProseMirror transforms.
+- **[brand/](brand/)** — logos and promo assets. New Scribe mark (Nib-Block, GitHub-blue) is at [brand/logo_512x512.png](brand/logo_512x512.png); source SVGs live in [extension/src/public/icon/](extension/src/public/icon/).
 
 ## Tech stack
 
-This extension has been made using [WXT Extension Framework](https://github.com/wxt-dev/wxt).
+Built on [WXT](https://github.com/wxt-dev/wxt). Core dependencies:
 
-To mimic the GitHub native styling, GitHub Primer CSS variables and classes from
-official [GitHub website](github.com) have been used.
-
-Some libraries to mention:
-- [ProseMirror](https://prosemirror.net/)
-- [prosekit](https://github.com/prosekit/prosekit)
-- [unified](https://github.com/unifiedjs/unified)
-- [SolidJS](https://github.com/solidjs/solid)
-- [Kobalte](https://kobalte.dev)
-
-Some of my core own libraries:
+- [ProseMirror](https://prosemirror.net/) + [prosekit](https://github.com/prosekit/prosekit)
+- [SolidJS](https://github.com/solidjs/solid) + [Kobalte](https://kobalte.dev)
+- [unified](https://github.com/unifiedjs/unified) for markdown processing
 - [statebuilder](https://github.com/riccardoperra/statebuilder)
-- [prosemirror-processor](https://github.com/riccardoperra/prosemirror-processor)
-- [solid-codemirror](https://github.com/riccardoperra/solid-codemirror)
+- GitHub Primer CSS variables for native styling
 
-## Running the project
+## License
 
-- Install the dependencies via `pnpm install`
-- Build core libs via `pnpm build:core-libs` (or build them individually)
-- Run the extension via `pnpm run dev:extension`
+**Apache License 2.0** — inherited from upstream. See [LICENSE](LICENSE) for the
+full text and [NOTICE](NOTICE) for attribution. Modifications in this fork
+(prefix tagging, rebrand, rendered-comment tinter, etc.) are released under the
+same Apache 2.0 terms.
 
+If you're redistributing Scribe or building on it, be aware of the Apache 2.0
+obligations: keep the `LICENSE` and `NOTICE` files, preserve copyright headers,
+and mark any files you modify.
 
+## Credits
+
+- Upstream editor by [@riccardoperra](https://github.com/riccardoperra) — [riccardoperra/better-comments-for-github](https://github.com/riccardoperra/better-comments-for-github).
+- Scribe fork, prefix-tag feature, rebrand by [@0xisk](https://github.com/0xisk).
+- Scribe logo (Nib-Block) designed to coexist with GitHub's visual identity — sources at [extension/src/public/icon/](extension/src/public/icon/).

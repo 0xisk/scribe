@@ -15,12 +15,12 @@
  */
 
 import { effect } from 'solid-js/web'
-import { createSuggestionData } from '@better-comments-for-github/core/editor/utils/loadSuggestionData'
-import { createGitHubUploaderReactHandler } from '@better-comments-for-github/core/editor/utils/reactFileUploader'
-import { createSuggestedChangeConfigData } from '@better-comments-for-github/core/editor/utils/loadCodeSuggestionChangesConfig'
+import { createSuggestionData } from '@scribe/core/editor/utils/loadSuggestionData'
+import { createGitHubUploaderReactHandler } from '@scribe/core/editor/utils/reactFileUploader'
+import { createSuggestedChangeConfigData } from '@scribe/core/editor/utils/loadCodeSuggestionChangesConfig'
 import { createEffect } from 'solid-js'
-import type { SuggestedChangeConfig } from '@better-comments-for-github/core/editor/utils/loadCodeSuggestionChangesConfig'
-import type { SuggestionData } from '@better-comments-for-github/core/editor/utils/loadSuggestionData'
+import type { SuggestedChangeConfig } from '@scribe/core/editor/utils/loadCodeSuggestionChangesConfig'
+import type { SuggestionData } from '@scribe/core/editor/utils/loadSuggestionData'
 
 export class GitHubReactTextareaHandler {
   readonly classes: { [key: string]: Array<string> } = {}
