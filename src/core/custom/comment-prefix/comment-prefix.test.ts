@@ -211,17 +211,17 @@ describe('insertCommentPrefix', () => {
     const editor = makeEditor()
     editor.setContent('code here')
     editor.commands.insertCommentPrefix('blocking:')
-    editor.commands.insertCommentPrefix('nit:')
-    expect(getFirstParagraphText(editor)).toBe('⚪ nit: code here')
+    editor.commands.insertCommentPrefix('nitpick:')
+    expect(getFirstParagraphText(editor)).toBe('⚪ nitpick: code here')
   })
 
   test('detects existing plain prefix even when emoji is now configured', () => {
     setPrefixes(teamPreset)
     const editor = makeEditor()
-    // plain "nit: ..." typed manually, no emoji
-    editor.setContent('nit: old style comment')
+    // plain "nitpick: ..." typed manually, no emoji
+    editor.setContent('nitpick: old style comment')
     editor.commands.insertCommentPrefix('blocking:')
-    // should REPLACE the plain nit:, not stack
+    // should REPLACE the plain nitpick:, not stack
     expect(getFirstParagraphText(editor)).toBe('🔴 blocking: old style comment')
   })
 

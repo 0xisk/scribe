@@ -55,6 +55,12 @@ include:
     - src/core/editor/settings/prefix-settings.module.css (new file)
 - New rendered-comment tinter content script:
     - extension/src/utils/renderedCommentTinter.ts  (new file)
+- New PR-level tag summary widget:
+    - extension/src/utils/prSummaryWidget.ts        (new file)
+- New approve-with-blocking guard:
+    - extension/src/utils/approveGuard.ts           (new file)
+- New repo-level prefix config loader:
+    - extension/src/utils/repoConfig.ts             (new file)
 - Modifications to wire the prefix feature through the editor:
     - src/core/editor/extension.ts                   (extended)
     - src/core/editor/slash-menu/slash-menu.tsx      (extended)

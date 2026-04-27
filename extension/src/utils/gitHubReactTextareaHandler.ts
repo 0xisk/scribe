@@ -18,7 +18,7 @@ import { effect } from 'solid-js/web'
 import { createSuggestionData } from '@scribe/core/editor/utils/loadSuggestionData'
 import { createGitHubUploaderReactHandler } from '@scribe/core/editor/utils/reactFileUploader'
 import { createSuggestedChangeConfigData } from '@scribe/core/editor/utils/loadCodeSuggestionChangesConfig'
-import { createEffect } from 'solid-js'
+import { createEffect, onCleanup } from 'solid-js'
 import type { SuggestedChangeConfig } from '@scribe/core/editor/utils/loadCodeSuggestionChangesConfig'
 import type { SuggestionData } from '@scribe/core/editor/utils/loadSuggestionData'
 
@@ -68,6 +68,15 @@ export class GitHubReactTextareaHandler {
             ? wrapper.style.setProperty('display', 'none')
             : wrapper.style.removeProperty('display')
         }
+        // CRITICAL: restore the native wrapper when this Solid scope tears
+        // down. Without this, a dispose (SPA navigation, React re-render,
+        // turbo:load) leaves the native textarea permanently `display: none`
+        // while Scribe's own DOM is already gone — the form ends up with no
+        // visible body field. Common on the new-discussion page where GitHub
+        // briefly re-renders the form after client-side validation.
+        onCleanup(() => {
+          wrapper?.style.removeProperty('display')
+        })
       })
 
       this.findModuleContainer()?.prepend(node)

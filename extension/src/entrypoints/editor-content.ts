@@ -28,10 +28,15 @@ import { GitHubEditorInjector } from '../utils/injectEditor'
 import { GitHubReactTextareaHandler } from '../utils/gitHubReactTextareaHandler'
 import { githubQueryEditorParent } from '../utils/githubQueryEditorParent'
 import { startRenderedCommentTinter } from '../utils/renderedCommentTinter'
+import { setActiveRepo } from '../utils/repoConfig'
+import { startPrSummaryWidget } from '../utils/prSummaryWidget'
+import { startApproveGuard } from '../utils/approveGuard'
 import type { EditorType } from '@scribe/core/editor/editor'
 
 export default defineUnlistedScript(() => {
   startRenderedCommentTinter()
+  startPrSummaryWidget()
+  startApproveGuard()
 
   createRoot(() => {
     let observerDisposer: undefined | (() => void)
@@ -56,6 +61,10 @@ export default defineUnlistedScript(() => {
         const repository = () => parsedUrl()?.repository ?? null
         const repositoryOwner = () => parsedUrl()?.repositoryOwner ?? null
         const pageFlags = () => parsedUrl()?.flags ?? 0
+
+        // Fetch the repo's .scribe.json (if any) whenever we land on a repo.
+        // Applies/clears the repo-level prefix override automatically.
+        void setActiveRepo(repositoryOwner(), repository())
         if (observerDisposer) {
           observerDisposer()
           observerDisposer = undefined
@@ -200,7 +209,25 @@ export default defineUnlistedScript(() => {
                     reactTextareaHandler.getMountEditorFn()
                 }
 
+                // A previous mount in this same container may have left an
+                // empty `#github-better-comment` root behind — Solid's render
+                // dispose only clears children, not the root element itself.
+                // If `onRemoved` for the old textarea hasn't fired (e.g. when
+                // GitHub re-renders the form and `onAdded` for the new
+                // textarea is processed first in the same mutation batch), the
+                // stale shell would sit in the container alongside the new
+                // editor and surface as duplicate UI ("Missing a tag?" twice).
+                element
+                  .querySelectorAll('#github-better-comment')
+                  .forEach((stale) => stale.remove())
+
                 const root = editorInjector.createRootContainer()
+                // Pair the injection with a removal on dispose so we don't
+                // leak shells across SPA navigations or React re-renders.
+                onCleanup(() => {
+                  root.remove()
+                })
+
                 // Since I didn't really find a good way to detect if the current textarea
                 // has been disconnected. I'll now check via mutation observer.
                 // TODO: potential perforamnce issue

@@ -70,6 +70,44 @@
   padding: var(--base-size-8);
 }
 
+.repoOverrideBanner {
+  display: flex;
+  gap: var(--base-size-6);
+  align-items: flex-start;
+  padding: var(--base-size-6) var(--base-size-8);
+  background: var(--bgColor-accent-muted, #ddf4ff);
+  border: 1px solid var(--borderColor-accent-muted, #54aeff);
+  border-radius: var(--borderRadius-medium);
+  color: var(--fgColor-accent, #0969da);
+  font-size: 12px;
+}
+
+.repoOverrideBanner svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.repoOverrideHeading {
+  font-weight: var(--base-text-weight-semibold, 600);
+}
+
+.repoOverrideHeading a {
+  color: inherit;
+  text-decoration: underline;
+}
+
+.repoOverrideCaption {
+  color: var(--fgColor-muted);
+  margin-top: 2px;
+}
+
+.repoOverrideCaption code {
+  font-family: var(--fontStack-monospace);
+  background: var(--bgColor-neutral-muted);
+  padding: 0 var(--base-size-4);
+  border-radius: 3px;
+}
+
 .row {
   display: flex;
   gap: var(--base-size-4);

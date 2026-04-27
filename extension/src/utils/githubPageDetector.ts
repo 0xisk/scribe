@@ -158,6 +158,13 @@ export function createGitHubEditorInstance(
     disposeEditorInstance?.()
     disposeEditorInstance = null
 
+    // Clear the per-textarea instance marker BEFORE dropping the textarea
+    // reference. Otherwise a textarea that survives SPA navigation keeps the
+    // stale Symbol, and the dedup guard in onNodeAdded (content script)
+    // refuses to re-mount Scribe on it.
+    const ta = textareaRef()
+    if (ta) Reflect.set(ta, $GITHUB_EDITOR_INSTANCE, null)
+
     setTextareaRef(null)
     ownerDisposer()
 

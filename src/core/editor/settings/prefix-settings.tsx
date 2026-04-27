@@ -19,13 +19,15 @@ import LucideTrash from 'lucide-solid/icons/trash-2'
 import LucideArrowUp from 'lucide-solid/icons/arrow-up'
 import LucideArrowDown from 'lucide-solid/icons/arrow-down'
 import LucidePlus from 'lucide-solid/icons/plus'
+import LucideInfo from 'lucide-solid/icons/info'
 import {
   addPrefix,
   applyPreset,
   movePrefix,
-  prefixes,
+  personalPrefixes,
   prefixPresets,
   removePrefix,
+  repoOverride,
   updatePrefix,
 } from '../../custom/comment-prefix/comment-prefix-config'
 import styles from './prefix-settings.module.css'
@@ -59,10 +61,34 @@ export function PrefixSettings() {
         <h4 class={styles.heading}>Comment prefixes</h4>
         <p class={styles.caption}>
           Classify review comments by inserting a prefix like{' '}
-          <code>nit:</code> at the start. Access from the toolbar or type{' '}
+          <code>nitpick:</code> at the start. Access from the toolbar or type{' '}
           <code>/prefix</code> in the editor.
         </p>
       </div>
+
+      <Show when={repoOverride()}>
+        {(override) => (
+          <div class={styles.repoOverrideBanner}>
+            <LucideInfo size={14} />
+            <div>
+              <div class={styles.repoOverrideHeading}>
+                Using repo config from{' '}
+                <a
+                  href={override().source.url}
+                  target="_blank"
+                  rel="noopener"
+                >
+                  {override().source.owner}/{override().source.repo}
+                </a>
+              </div>
+              <div class={styles.repoOverrideCaption}>
+                Your personal prefixes below stay saved — they'll be used
+                again on any repo without a <code>.scribe.json</code>.
+              </div>
+            </div>
+          </div>
+        )}
+      </Show>
 
       <div class={styles.presetRow}>
         <span class={styles.presetLabel}>Load preset:</span>
@@ -82,14 +108,14 @@ export function PrefixSettings() {
 
       <div class={styles.list}>
         <Show
-          when={prefixes().length > 0}
+          when={personalPrefixes().length > 0}
           fallback={
             <div class={styles.empty}>
               No prefixes configured. Add one below or load a preset.
             </div>
           }
         >
-          <For each={prefixes()}>
+          <For each={personalPrefixes()}>
             {(prefix, index) => (
               <PrefixRow
                 token={prefix.token}
@@ -97,7 +123,7 @@ export function PrefixSettings() {
                 color={prefix.color}
                 emoji={prefix.emoji}
                 isFirst={index() === 0}
-                isLast={index() === prefixes().length - 1}
+                isLast={index() === personalPrefixes().length - 1}
               />
             )}
           </For>
@@ -116,7 +142,7 @@ export function PrefixSettings() {
         <input
           type="text"
           class={'FormControl FormControl-input'}
-          placeholder="Token (e.g. nit:)"
+          placeholder="Token (e.g. nitpick:)"
           value={newToken()}
           onInput={(e) => setNewToken(e.currentTarget.value)}
           onKeyDown={(e) => {

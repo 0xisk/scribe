@@ -15,7 +15,7 @@
 <p align="center">
   A browser extension that <strong>replaces</strong> GitHub's native comment box
   with a block-based Markdown editor, plus a per-line prefix palette
-  (<code>nit:</code>, <code>non-blocking:</code>, <code>followup:</code>,
+  (<code>praise:</code>, <code>nit:</code>, <code>followup:</code>,
   <code>question:</code>, <code>blocking:</code>) so review comments stay
   classified and consistent.
 </p>
@@ -25,7 +25,8 @@
 > **This is a fork of [riccardoperra/better-comments-for-github](https://github.com/riccardoperra/better-comments-for-github).**
 > The upstream project provides the block-based editor. Scribe adds the review-comment
 > prefix system (colored tags, palette bar, in-editor tinting, post-render color pass on
-> GitHub) and a rebrand. All upstream improvements flow back in.
+> submitted comments), a PR tag summary strip, an approve-with-blocking guard, repo-level
+> prefix config via `.scribe.json`, and a rebrand. All upstream improvements flow back in.
 
 > [!IMPORTANT]
 >
@@ -35,6 +36,21 @@
 
 ## What's new in Scribe
 
+### Why explicit review?
+
+GitHub's default review experience leaves the *weight* of each comment implicit — readers have to guess whether a note is blocking, a nit, or just a thought, and tone gets read inconsistently across the team. Scribe makes review explicit. A palette pinned above every PR comment editor forces each review comment to declare its intent (`blocking:`, `nitpick:`, `followup:`, `question:`, `praise:`) before it ships. The bar nags while a comment is untagged and confirms once at least one line is tagged — so reviewers and authors agree on the *kind* of feedback before they argue about its content.
+
+<table>
+  <tr>
+    <td align="center"><strong>Untagged — the bar nags</strong></td>
+    <td align="center"><strong>Tagged — the bar confirms</strong></td>
+  </tr>
+  <tr>
+    <td><img src="./assets/before-tag.png" alt="Yellow Missing a tag? warning bar above an empty comment editor, with the praise / nitpick / followup / question / blocking palette on the right"></td>
+    <td><img src="./assets/after-tag.png" alt="Green Tagged. confirmation bar above a comment that begins with a red blocking: prefix"></td>
+  </tr>
+</table>
+
 On top of the upstream editor, Scribe ships a complete review-comment tagging system:
 
 - ✅ **Per-line prefix tags.** Insert `blocking:`, `nit:`, `followup:`, `question:`, `praise:`, etc. at the start of any line with a single click — emit clean Markdown like `🔴 **blocking:** the actual bug`.
@@ -43,6 +59,9 @@ On top of the upstream editor, Scribe ships a complete review-comment tagging sy
 - ✅ **Live editor tinting.** As you type, the configured color is applied to the token (`nit:` shows in gray, `blocking:` in red, etc.) via a ProseMirror decoration plugin — markdown output stays `**nit:**`, unchanged.
 - ✅ **Post-render color in GitHub comments.** A content-script tinter color-codes matching `<strong>` tags in already-submitted comments across GitHub — every review you read gets the same visual classification you typed.
 - ✅ **Settings UI.** Add / edit / reorder / delete prefixes. Emoji + color per prefix. One-click presets. Syncs across devices via `chrome.storage.sync`.
+- ✅ **PR tag summary.** At the top of every PR conversation, an inline summary chip-strip shows how many unresolved comments carry each prefix (`🔴 blocking: 2  ⚪ nit: 5`). Blocking tags surface first. Only unresolved threads are counted.
+- ✅ **Approve guard.** When you go to submit an Approve review that still has pending `blocking:` (or equivalent) comments, Scribe intercepts the click and asks you to confirm before the approval goes through.
+- ✅ **Repo-level prefix config.** Drop a `.scribe.json` at the root of any repo and everyone with Scribe installed will automatically use that team's prefix palette instead of their personal one — no settings sync required.
 
 ## Core features (inherited from upstream)
 
@@ -135,7 +154,7 @@ pnpm --filter ./extension storybook
 Monorepo via pnpm workspaces:
 
 - **[src/](src/)** — the editor core (ProseMirror + prosekit + SolidJS + Kobalte). Prefix-tag feature lives at [src/core/custom/comment-prefix/](src/core/custom/comment-prefix/).
-- **[extension/](extension/)** — the browser extension shell (WXT). Content scripts, page detection, textarea handlers, the post-render tinter ([extension/src/utils/renderedCommentTinter.ts](extension/src/utils/renderedCommentTinter.ts)).
+- **[extension/](extension/)** — the browser extension shell (WXT). Content scripts, page detection, textarea handlers, post-render tinter ([extension/src/utils/renderedCommentTinter.ts](extension/src/utils/renderedCommentTinter.ts)), PR summary widget ([extension/src/utils/prSummaryWidget.ts](extension/src/utils/prSummaryWidget.ts)), repo config loader ([extension/src/utils/repoConfig.ts](extension/src/utils/repoConfig.ts)), and approve guard ([extension/src/utils/approveGuard.ts](extension/src/utils/approveGuard.ts)).
 - **[markdown-schema/](markdown-schema/)** — ProseMirror node definitions for Markdown.
 - **[markdown-transformer/](markdown-transformer/)** — Markdown ↔ ProseMirror transforms.
 - **[brand/](brand/)** — logos and promo assets. New Scribe mark (Nib-Block, GitHub-blue) is at [brand/logo_512x512.png](brand/logo_512x512.png); source SVGs live in [extension/src/public/icon/](extension/src/public/icon/).

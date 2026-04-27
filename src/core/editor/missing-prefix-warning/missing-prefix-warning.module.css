@@ -21,34 +21,39 @@
   padding: var(--base-size-6) var(--base-size-8);
   font-size: 12px;
   flex-wrap: wrap;
+  /* Solid left-border accent; see .barWarning / .barTagged for the color. */
+  border-left: 4px solid transparent;
 }
 
 .barWarning {
-  background: var(--bgColor-attention-muted, #fff8c5);
-  border-bottom: 1px solid var(--borderColor-attention-muted, #eac54f);
-  color: var(--fgColor-attention, #7d4e00);
-}
-
-.barWarning .icon {
+  /* Hardcoded fallbacks read clearly in both light and dark GitHub themes,
+     independent of Primer's dark-mode "muted" tokens which render nearly
+     invisible. The left-border accent is the primary color signal. */
+  background: var(--bgColor-attention-muted, rgba(242, 184, 58, 0.15));
+  border-left-color: #bf8700;
   color: var(--fgColor-attention, #9a6700);
 }
 
+.barWarning .icon {
+  color: #bf8700;
+}
+
 .barWarning .quickAction {
-  border-color: var(--borderColor-attention-muted, #eac54f);
+  border-color: #bf8700;
 }
 
 .barTagged {
-  background: var(--bgColor-success-muted, #dafbe1);
-  border-bottom: 1px solid var(--borderColor-success-muted, #aceebb);
+  background: var(--bgColor-success-muted, rgba(26, 127, 55, 0.12));
+  border-left-color: #1a7f37;
   color: var(--fgColor-success, #1a7f37);
 }
 
 .barTagged .icon {
-  color: var(--fgColor-success, #1a7f37);
+  color: #1a7f37;
 }
 
 .barTagged .quickAction {
-  border-color: var(--borderColor-success-muted, #aceebb);
+  border-color: #1a7f37;
 }
 
 .icon {

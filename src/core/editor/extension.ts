@@ -63,6 +63,7 @@ import { defineExitable } from '../custom/exitable/exitable'
 import { defineTableInsert } from '../custom/table/table-insert-plugin'
 import { defineLink } from '../custom/link/link'
 import { defineCommentPrefix } from '../custom/comment-prefix/comment-prefix'
+import { defineMarkdownPaste } from '../custom/markdown-paste/markdown-paste'
 import type { HeadingAttrs } from 'prosekit/extensions/heading'
 
 function defineCode() {
@@ -143,6 +144,10 @@ export function defineExtension() {
     }),
     defineTableInsert(),
     defineCommentPrefix(),
+    // Last so existing paste handlers (link, issue-reference, image) win when
+    // their patterns match. This is the catch-all that parses plain text as
+    // markdown.
+    defineMarkdownPaste(),
   )
 }
 

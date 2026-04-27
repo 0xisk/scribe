@@ -32,7 +32,7 @@ export default defineConfig({
   manifest: {
     name: 'Scribe',
     description:
-      'A better GitHub comment box — block-based WYSIWYG Markdown editor with per-line review tags (nit, non-blocking, followup, question, blocking) and color-coded classification.',
+      'A better GitHub comment box — block-based WYSIWYG Markdown editor with per-line review tags (praise, nit, followup, question, blocking) and color-coded classification.',
     author: {
       email: 'riccardo.perra@icloud.com',
     },

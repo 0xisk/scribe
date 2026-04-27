@@ -95,7 +95,7 @@ export function MissingPrefixWarning() {
           }
         >
           <LucideCheckCircle size={14} class={styles.icon} />
-          <span class={styles.message}>Tagged — add more if you have several notes.</span>
+          <span class={styles.message}>Tagged.</span>
         </Show>
         <div class={styles.actions}>
           <For each={prefixes()}>

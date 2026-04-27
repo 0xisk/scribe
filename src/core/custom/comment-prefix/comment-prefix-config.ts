@@ -27,16 +27,16 @@ export type CommentPrefixPreset = 'team' | 'conventional'
 
 export const teamPreset: Array<CommentPrefix> = [
   {
-    token: 'nit:',
-    description: 'Non-blocking stylistic suggestion',
-    color: 'var(--fgColor-muted)',
-    emoji: '⚪',
+    token: 'praise:',
+    description: 'Highlight something done well',
+    color: 'var(--fgColor-success, #1a7f37)',
+    emoji: '🟢',
   },
   {
-    token: 'non-blocking:',
-    description: 'Feedback that should not block the merge',
-    color: 'var(--fgColor-attention, #9a6700)',
-    emoji: '🟡',
+    token: 'nitpick:',
+    description: 'Small stylistic suggestion — safe to ignore',
+    color: 'var(--fgColor-muted)',
+    emoji: '⚪',
   },
   {
     token: 'followup:',
@@ -80,7 +80,7 @@ export const prefixPresets: Record<
 > = {
   team: {
     label: 'Team convention',
-    description: 'nit, non-blocking, followup, question, blocking',
+    description: 'praise, nitpick, followup, question, blocking',
     prefixes: teamPreset,
   },
   conventional: {
@@ -98,10 +98,35 @@ function getStorageArea(): chrome.storage.StorageArea | null {
   return chrome.storage[STORAGE_AREA] ?? chrome.storage.local ?? null
 }
 
-const [prefixes, setPrefixesInternal] = createSignal<Array<CommentPrefix>>(
-  teamPreset,
-  { equals: false },
-)
+// Personal prefixes — what the user configures in Settings, persisted to
+// chrome.storage.sync. This is the baseline.
+const [personalPrefixes, setPersonalPrefixesInternal] = createSignal<
+  Array<CommentPrefix>
+>(teamPreset, { equals: false })
+
+// Repo-level override — when viewing a repo that ships a .scribe.json, the
+// fetched prefix list takes precedence over the user's personal config.
+// Cleared when the user navigates away or when the fetch fails.
+export interface RepoOverride {
+  prefixes: Array<CommentPrefix>
+  source: { owner: string; repo: string; url: string }
+}
+const [repoOverride, setRepoOverrideInternal] =
+  createSignal<RepoOverride | null>(null)
+
+// Effective prefix list — what every caller actually reads. Plain function
+// (not createMemo) so we don't rely on a reactive owner at module load.
+// Callers inside a reactive scope subscribe to both underlying signals.
+const prefixes: () => Array<CommentPrefix> = () => {
+  const override = repoOverride()
+  if (override) return override.prefixes
+  return personalPrefixes()
+}
+
+// Internal setter used by both personal and repo paths to trigger subscribers.
+function setPrefixesInternal(next: Array<CommentPrefix>) {
+  setPersonalPrefixesInternal(next)
+}
 
 const prefixSubscribers = new Set<() => void>()
 
@@ -186,14 +211,17 @@ export function setPrefixes(next: Array<CommentPrefix>) {
   }
 }
 
+// Settings-UI helpers always operate on personal config (the persisted one).
+// Even when a repo override is active, editing in Settings edits what the user
+// falls back to when navigating away.
 export function addPrefix(prefix: CommentPrefix) {
-  const current = prefixes()
+  const current = personalPrefixes()
   if (current.some((p) => p.token === prefix.token)) return
   setPrefixes([...current, prefix])
 }
 
 export function removePrefix(token: string) {
-  setPrefixes(prefixes().filter((p) => p.token !== token))
+  setPrefixes(personalPrefixes().filter((p) => p.token !== token))
 }
 
 export function updatePrefix(
@@ -201,12 +229,12 @@ export function updatePrefix(
   next: CommentPrefix,
 ) {
   setPrefixes(
-    prefixes().map((p) => (p.token === originalToken ? next : p)),
+    personalPrefixes().map((p) => (p.token === originalToken ? next : p)),
   )
 }
 
 export function movePrefix(token: string, delta: number) {
-  const current = prefixes().slice()
+  const current = personalPrefixes().slice()
   const idx = current.findIndex((p) => p.token === token)
   if (idx < 0) return
   const target = idx + delta
@@ -222,7 +250,7 @@ export function applyPreset(preset: CommentPrefixPreset, mode: 'replace' | 'merg
     setPrefixes(incoming.map((p) => ({ ...p })))
     return
   }
-  const current = prefixes()
+  const current = personalPrefixes()
   const existing = new Set(current.map((p) => p.token))
   const merged = [...current]
   for (const item of incoming) {
@@ -231,7 +259,21 @@ export function applyPreset(preset: CommentPrefixPreset, mode: 'replace' | 'merg
   setPrefixes(merged)
 }
 
-export { prefixes }
+// Public accessors for the repo-override layer (feature 2: team-shared config).
+export function getRepoOverride() {
+  return repoOverride()
+}
+
+export function setRepoOverride(next: RepoOverride | null) {
+  setRepoOverrideInternal(next)
+  notifyPrefixSubscribers()
+}
+
+export function clearRepoOverride() {
+  setRepoOverride(null)
+}
+
+export { personalPrefixes, prefixes, repoOverride }
 
 export function escapeRegExp(input: string): string {
   return input.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
