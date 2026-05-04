@@ -331,6 +331,14 @@
   }
 }
 
+/* Notion-tight spacing between consecutive task list items. Scoped strictly
+ * to task→task adjacency so bullet/ordered lists keep their normal gap. */
+.ProseMirror
+  .prosemirror-flat-list[data-list-kind='task']
+  + .prosemirror-flat-list[data-list-kind='task'] {
+  margin-top: 0;
+}
+
 .prosemirror-flat-list.ProseMirror-selectednode {
   outline: none;
 }
@@ -552,6 +560,18 @@
   .task-list-item:has(> input.task-list-item-checkbox:checked) {
   text-decoration: line-through;
   color: var(--fgColor-muted, rgba(101, 109, 118, 0.7));
+}
+
+/* Loose-list rendering wraps each task item in its own <ul.contains-task-list>,
+ * and @primer/css applies margin-bottom: var(--base-size-16) to every <ul> in
+ * .markdown-body — that's what produces the visible 16px gap between adjacent
+ * checkboxes in rendered comments. Drop the bottom margin only when the next
+ * sibling is another task list, so the natural gap before non-list content
+ * (paragraphs, headings) is preserved. */
+.markdown-body ul.contains-task-list:has(+ ul.contains-task-list),
+.comment-body ul.contains-task-list:has(+ ul.contains-task-list),
+.js-comment-body ul.contains-task-list:has(+ ul.contains-task-list) {
+  margin-bottom: 0;
 }
 
 .prosemirror-flat-list[data-list-kind='toggle'] > .list-marker {
