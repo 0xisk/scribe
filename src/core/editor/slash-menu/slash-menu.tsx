@@ -113,7 +113,10 @@ const SlashMenuItems: Array<SlashMenuItem> = [
     actionId: 'horizontalRule',
   },
   {
-    label: 'Details',
+    // Surfaces as "Toggle" so /toggle finds it (Notion terminology). The
+    // underlying PM node is still `details` and serializes to <details> HTML
+    // for GitHub.
+    label: 'Toggle',
     command: (editor) => editor.commands.insertDetails(),
     canExec: (editor) => editor.commands.insertDetails.canExec(),
     actionId: 'details',

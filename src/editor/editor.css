@@ -406,6 +406,154 @@
   cursor: pointer;
 }
 
+/* Notion-style checkbox: replace the native browser checkbox with a small
+ * rounded square that fills with a blue check on toggle. The marker container
+ * already centres the box at the gutter, so we only restyle the input. */
+.prosemirror-flat-list[data-list-kind='task'] > .list-marker label {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 0;
+}
+
+.prosemirror-flat-list[data-list-kind='task']
+  > .list-marker
+  input[type='checkbox'] {
+  appearance: none;
+  -webkit-appearance: none;
+  position: relative;
+  width: 14px;
+  height: 14px;
+  margin: 0;
+  border: 1.5px solid var(--borderColor-default, #d0d7de);
+  border-radius: 3px;
+  background-color: transparent;
+  cursor: pointer;
+  vertical-align: middle;
+  transition:
+    background-color 120ms ease,
+    border-color 120ms ease;
+}
+
+.prosemirror-flat-list[data-list-kind='task']
+  > .list-marker
+  input[type='checkbox']:hover {
+  background-color: var(--bgColor-muted, rgba(208, 215, 222, 0.32));
+}
+
+.prosemirror-flat-list[data-list-kind='task']
+  > .list-marker
+  input[type='checkbox']:checked {
+  background-color: #2383e2; /* Notion blue */
+  border-color: #2383e2;
+}
+
+/* The check itself: a rotated rectangle drawing the right + bottom edges. */
+.prosemirror-flat-list[data-list-kind='task']
+  > .list-marker
+  input[type='checkbox']:checked::after {
+  content: '';
+  position: absolute;
+  left: 3px;
+  top: 0;
+  width: 4px;
+  height: 8px;
+  border: solid #fff;
+  border-width: 0 1.5px 1.5px 0;
+  transform: rotate(45deg);
+}
+
+/* Strike + dim the entire statement once checked. `>` keeps the rule scoped
+ * to this item only, so a nested unchecked sub-task underneath a checked
+ * parent stays at full opacity. text-decoration is inherited as
+ * text-decoration-line, so links and inline marks inside the line get struck
+ * through too — matching Notion's behaviour. */
+.prosemirror-flat-list[data-list-kind='task'][data-list-checked]
+  > .list-content {
+  text-decoration: line-through;
+  color: var(--fgColor-muted, rgba(101, 109, 118, 0.7));
+}
+
+/* === Notion-style task lists in *rendered* GitHub comments =================
+ *
+ * editor.css is bundled into editor-content.css and registered as a content-
+ * script stylesheet (see extension/wxt.config.ts → content_scripts.css), so
+ * any rules added here also reach the host page. The selectors above target
+ * Scribe's editor markup (.prosemirror-flat-list); the rules below target
+ * GitHub's server-rendered task-list markup (.task-list-item /
+ * .task-list-item-checkbox) so submitted comments get the same treatment.
+ *
+ * Scope: only inside known comment surfaces (.markdown-body, .comment-body,
+ * .js-comment-body) so we don't restyle task-list checkboxes that GitHub
+ * uses elsewhere on the page (e.g. in the sidebar's project boards).
+ * ========================================================================= */
+.markdown-body .task-list-item > input.task-list-item-checkbox,
+.comment-body .task-list-item > input.task-list-item-checkbox,
+.js-comment-body .task-list-item > input.task-list-item-checkbox {
+  appearance: none;
+  -webkit-appearance: none;
+  position: relative;
+  width: 14px;
+  height: 14px;
+  margin: 0 0.4em 0.15em -1.6em;
+  border: 1.5px solid var(--borderColor-default, #d0d7de);
+  border-radius: 3px;
+  background-color: transparent;
+  cursor: pointer;
+  vertical-align: middle;
+  transition:
+    background-color 120ms ease,
+    border-color 120ms ease;
+}
+
+.markdown-body .task-list-item > input.task-list-item-checkbox:hover,
+.comment-body .task-list-item > input.task-list-item-checkbox:hover,
+.js-comment-body .task-list-item > input.task-list-item-checkbox:hover {
+  background-color: var(--bgColor-muted, rgba(208, 215, 222, 0.32));
+}
+
+.markdown-body .task-list-item > input.task-list-item-checkbox:checked,
+.comment-body .task-list-item > input.task-list-item-checkbox:checked,
+.js-comment-body .task-list-item > input.task-list-item-checkbox:checked {
+  background-color: #2383e2;
+  border-color: #2383e2;
+}
+
+.markdown-body
+  .task-list-item
+  > input.task-list-item-checkbox:checked::after,
+.comment-body
+  .task-list-item
+  > input.task-list-item-checkbox:checked::after,
+.js-comment-body
+  .task-list-item
+  > input.task-list-item-checkbox:checked::after {
+  content: '';
+  position: absolute;
+  left: 3px;
+  top: 0;
+  width: 4px;
+  height: 8px;
+  border: solid #fff;
+  border-width: 0 1.5px 1.5px 0;
+  transform: rotate(45deg);
+}
+
+/* Strike-through the line when the contained checkbox is checked. `:has()`
+ * is used so we don't depend on GitHub adding a class to the parent — they
+ * just toggle the input's `checked` attribute. The selector stays bound to
+ * `.task-list-item` (a sibling) so we don't accidentally strike unrelated
+ * paragraphs that happen to contain a checkbox. */
+.markdown-body
+  .task-list-item:has(> input.task-list-item-checkbox:checked),
+.comment-body
+  .task-list-item:has(> input.task-list-item-checkbox:checked),
+.js-comment-body
+  .task-list-item:has(> input.task-list-item-checkbox:checked) {
+  text-decoration: line-through;
+  color: var(--fgColor-muted, rgba(101, 109, 118, 0.7));
+}
+
 .prosemirror-flat-list[data-list-kind='toggle'] > .list-marker {
   position: absolute;
   right: 100%;

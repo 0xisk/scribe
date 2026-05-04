@@ -103,8 +103,45 @@ test('prosemirror -> markdown', () => {
 
   const result = convertPmSchemaToUnist(editor.state.doc, editor.schema)
 
+  // Output uses the multi-block shape (blank lines inside <details>) so the
+  // body re-parses as real markdown rather than HTML. CommonMark ends the
+  // opening html block at the first blank line, parses the body as markdown,
+  // then sees </details> as its own html block — remarkDetails rejoins the
+  // range on input.
   sameMarkdown(
     result,
-    `<details><summary>This is just a summary</summary><p>My summary content</p><blockquote><p>A quote text</p></blockquote></details>`,
+    `<details>\n<summary>This is just a summary</summary>\n\nMy summary content\n\n> A quote text\n\n</details>`,
   )
+})
+
+test('markdown -> prosemirror (multi-block with blank lines)', () => {
+  const editor = getEditorInstance(extension)
+  // The real-world GitHub <details> shape: blank lines between the opener
+  // and the body cause CommonMark to split the AST into sibling nodes. The
+  // remark transformer must rejoin them into a single details node.
+  const source = `<details>
+<summary>This is just a summary</summary>
+
+My summary content
+
+> A quote text
+
+</details>`
+  const unist = markdownToUnist(source, { transformers: [remarkDetails] })
+
+  const result = convertUnistToProsemirror(
+    unist,
+    editor.schema,
+    testUnknownHandler,
+  )
+
+  const expected = doc(
+    details(
+      detailsSummary('This is just a summary'),
+      p('My summary content'),
+      blockquote(p('A quote text')),
+    ),
+  )
+
+  sameNode(result, expected)
 })

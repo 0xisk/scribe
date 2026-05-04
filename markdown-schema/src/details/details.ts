@@ -22,7 +22,8 @@ import {
 } from 'prosekit/core'
 import { DOMParser, DOMSerializer } from 'prosemirror-model'
 import { pmNode } from '@prosemirror-processor/unist'
-import type { Html, Parent } from 'mdast'
+import { markdownFromUnistNode } from 'prosemirror-transformer-markdown/unified'
+import type { Html, Parent, Root } from 'mdast'
 import type { DetailsNode } from './remarkDetails'
 
 export { remarkDetails } from './remarkDetails'
@@ -69,33 +70,89 @@ export function defineDetailsMarkdown() {
       code: true,
       defining: true,
       __fromUnist: (node, parent, context) => {
-        const [summary, content] = (node as DetailsNode).children
+        const detailsNode = node as DetailsNode
+        const [summary, ...body] = detailsNode.children as Array<any>
 
-        const contentNode = new window.DOMParser().parseFromString(
-          content.value,
-          'text/html',
-        )
-        const pmContentNode = DOMParser.fromSchema(context.schema).parse(
-          contentNode,
-        )
-        const pmSummaryNode = context.handle(
+        const pmSummary = context.handle(
           summary,
-          node as Parent,
-        ) as unknown as Array<any>
+          detailsNode as Parent,
+        ) as unknown as Array<any> | any | null
+        const pmSummaryNodes =
+          pmSummary == null
+            ? []
+            : Array.isArray(pmSummary)
+              ? pmSummary
+              : [pmSummary]
+
+        const pmBody: Array<any> = []
+        for (const child of body) {
+          if (child?.type === 'html') {
+            // Single-node (legacy) shape: body is one html mdast node carrying
+            // the inner HTML string. Parse it via the DOM.
+            const dom = new window.DOMParser().parseFromString(
+              (child as Html).value,
+              'text/html',
+            )
+            const parsed = DOMParser.fromSchema(context.schema).parse(dom)
+            parsed.content.forEach((c: any) => pmBody.push(c))
+          } else {
+            const result = context.handle(child, detailsNode as Parent)
+            if (result == null) continue
+            if (Array.isArray(result)) pmBody.push(...result)
+            else pmBody.push(result)
+          }
+        }
+
         return pmNode(
           context.schema.nodes.details,
-          [...pmSummaryNode, ...pmContentNode.children],
+          [...pmSummaryNodes, ...pmBody],
           {},
           { mode: 'fill' },
         )
       },
       __toUnist: (node, parent, context) => {
-        const htmlNode = DOMSerializer.fromSchema(context.schema).serializeNode(
-          node,
-        ) as HTMLElement
+        // Emit a single html mdast node whose value contains `<details>` and
+        // `</details>` separated by blank lines from the body — preserving the
+        // multi-block shape on disk. The body is serialized to markdown text
+        // (not HTML) by routing each PM body child through the registered PM →
+        // mdast handlers, then stringifying the resulting mdast root.
+        //
+        // Why one node rather than three (opener, body, closer): the
+        // PM → mdast framework's `handleAll` doesn't fully unwrap arrays
+        // returned from a node handler — a multi-node return ends up nested as
+        // a single child slot in the parent's children list, which mdast-util-
+        // to-markdown then can't serialize. Wrapping into one html block side-
+        // steps that limitation and still re-parses correctly: the html block
+        // ends at the first blank line, the body is parsed as markdown, and
+        // remarkDetails rejoins the range on input.
+        let summaryHtml = 'Details'
+        const bodyMdast: Array<any> = []
+        node.forEach((child: any, _: number, idx: number) => {
+          if (idx === 0 && child.type.name === 'detailsSummary') {
+            const serialized = DOMSerializer.fromSchema(
+              context.schema,
+            ).serializeNode(child) as HTMLElement
+            summaryHtml = serialized.innerHTML
+            return
+          }
+          const result = (context as any).handle(child, node)
+          if (result == null) return
+          if (Array.isArray(result)) bodyMdast.push(...result)
+          else bodyMdast.push(result)
+        })
+
+        const bodyMarkdown = bodyMdast.length
+          ? markdownFromUnistNode({
+              type: 'root',
+              children: bodyMdast as Root['children'],
+            } as Root).trimEnd()
+          : ''
+
         return {
           type: 'html',
-          value: `<details>${htmlNode.innerHTML}</details>`,
+          value: bodyMarkdown
+            ? `<details>\n<summary>${summaryHtml}</summary>\n\n${bodyMarkdown}\n\n</details>`
+            : `<details>\n<summary>${summaryHtml}</summary>\n\n</details>`,
         }
       },
       attrs: {

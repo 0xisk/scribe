@@ -15,8 +15,10 @@
  */
 
 import { fixTaskListEscaping } from './fix-task-list-escaping'
+import { fixHtmlTagEscaping } from './fix-html-tag-escaping'
 import type { ContentFixHandler } from './content-fix-handler'
 
 export const contentFixHandlers: Array<ContentFixHandler> = [
   fixTaskListEscaping,
+  fixHtmlTagEscaping,
 ] as const
