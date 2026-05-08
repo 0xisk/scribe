@@ -33,6 +33,7 @@ import {
   getLinkFromIssueReferenceAttrs,
 } from './issue-reference-utils'
 import type { GitHubIssueReference } from './remarkGitHubIssueReference'
+import type { Text } from 'mdast'
 
 export interface GitHubIssueReferenceAttrs {
   issue: number | string
@@ -69,16 +70,19 @@ export function defineIssueReferenceSpec() {
       )
     },
     __toUnist: (node) => {
+      // Emit a plain text mdast node with the URL. Why not the custom
+      // `githubIssueReference` type: details.__toUnist serializes its body via
+      // a fresh `markdownFromUnistNode` call that doesn't run the
+      // `remarkGitHubIssueReferenceSupport` postprocess, so any custom type
+      // surfacing inside <details> blows up mdast-util-to-markdown and the
+      // entire save silently fails. The URL round-trips: GFM autolink + the
+      // remarkParseLinkToGitHubIssueReference parse pass turn it back into a
+      // gh-issue-reference on load.
       const attrs = node.attrs as GitHubIssueReferenceAttrs
       return {
-        type: githubIssueReferenceType,
-        issue: attrs.issue,
-        owner: attrs.owner,
-        repository: attrs.repository,
-        href: attrs.href,
-        referenceType: attrs.type,
-        commentId: attrs.commentId,
-      } satisfies GitHubIssueReference
+        type: 'text',
+        value: getLinkFromIssueReferenceAttrs(attrs),
+      } satisfies Text
     },
     __fromUnist: toProseMirrorNode<GitHubIssueReference>(
       'gh-issue-reference',
